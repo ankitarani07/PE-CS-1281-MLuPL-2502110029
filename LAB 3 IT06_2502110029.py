@@ -30,4 +30,4 @@ print("Rework Parts   :", rework)
 print("Scrap Parts    :", scrap)
 print("Full Boxes     :", boxes)
 print("Loose Parts    :", loose)
-print("Audit:", boxes, "*", box_size, "+", loose, "==", accept, "->", boxes * box_size + loose == accept)
+print("Audit:", boxes, "*", box_size, "+", loose, "==", accept, "->", boxes * box_size + loose == accept).
