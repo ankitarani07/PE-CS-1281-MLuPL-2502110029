@@ -1,33 +1,24 @@
-IT 06
+accept_count = 0
+rework_count = 0
+scrap_count = 0
 
-accept = 0
-rework = 0
-scrap = 0
-
-# Batch inspection
+print("--- Starting Batch Inspection ---")
 for i in range(10):
-    diameter = float(input(f"Enter diameter of part {i + 1}: "))
-
-    if 9.95 <= diameter <= 10.05:
-        print("ACCEPT")
-        accept += 1
-    elif 9.90 <= diameter < 9.95 or 10.05 < diameter <= 10.10:
-        print("REWORK")
-        rework += 1
+    diameter = float(input(f"Enter diameter for part {i+1}: "))
+    
+    # NOTE: Adjust these boundary numbers based on your specific lab rules!
+    if 9.8 <= diameter <= 10.2:
+        accept_count += 1
+    elif 9.5 <= diameter < 9.8 or 10.2 < diameter <= 10.5:
+        rework_count += 1
     else:
-        print("SCRAP")
-        scrap += 1
+        scrap_count += 1
 
 # Pack only accepted parts into boxes of 4
 box_size = 4
-boxes = accept // box_size
-loose = accept % box_size
+full_boxes = accept_count // box_size
+loose_parts = accept_count % box_size
 
-# Closing summary
-print("\n----- SHIFT SUMMARY -----")
-print("Accepted Parts :", accept)
-print("Rework Parts   :", rework)
-print("Scrap Parts    :", scrap)
-print("Full Boxes     :", boxes)
-print("Loose Parts    :", loose)
-print("Audit:", boxes, "*", box_size, "+", loose, "==", accept, "->", boxes * box_size + loose == accept).
+print("\n--- Closing Shift Summary ---")
+print(f"Total Bin Counts: ACCEPT: {accept_count} | REWORK: {rework_count} | SCRAP: {scrap_count}")
+print(f"Packing Details: {full_boxes} full boxes, {loose_parts} loose parts left over.")
