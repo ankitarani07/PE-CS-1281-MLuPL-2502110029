@@ -1,52 +1,16 @@
-IT10
+
+# A list of 8 hostile inputs representing corrupted or malformed data
 hostile = [
-    "",
-    "ABC",
-    "12,",
-    ",25",
-    "12,25,30",
-    "abc,25",
-    "P101,-5",
-    "P101,999999"
+    "X-001 twenty Day",  # 1. String where a float is expected
+    "X-002",             # 2. Missing fields
+    "",                  # 3. Empty string
+    "X-004 25.01",       # 4. Missing the shift field
+    "   ",               # 5. Whitespace only
+    "X-006 25.0.1 Day",  # 6. Malformed float (two decimal points)
+    None,                # 7. NoneType object instead of string
+    []                   # 8. List object instead of string
 ]
 
-rejects = []
-parts = []
-
-
-def parse(line):
-    try:
-        code, dia = line.split(",")
-        dia = float(dia)
-
-        if dia < 0:
-            raise ValueError("negative diameter")
-
-        return code, dia
-
-    except ValueError as e:
-        rejects.append((line, str(e)))
-        return None
-
-
-for line in hostile:
-    result = parse(line)
-
-    if result is not None:
-        parts.append(result)
-
-
-# Guarded average
-if parts:
-    average = sum(dia for code, dia in parts) / len(parts)
-else:
-    average = 0
-
-
-print("Report")
-print("Valid parts:", len(parts))
-print("Average diameter:", average)
-
-print("\nRejects")
-for line, reason in rejects:
-    print(f"{line!r} -> {reason}")
+# Record for your lab: 
+# If run against a basic Lab 05 parser (e.g., `float(line.split()[1])`), 
+# test 1 ("X-001 twenty Day") kills the program immediately with a ValueError.
