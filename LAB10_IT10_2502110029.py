@@ -19,3 +19,18 @@ def tidy_workshop():
 
 if __name__ == "__main__":
     tidy_workshop()
+    The "Operator's Manual" README format:
+Rather than a standard README, format it like a piece of industrial equipment documentation:
+
+Markdown
+# 🏭 The Batch Inspector (v1.0)
+**Purpose:** Automates the parsing, sorting, and reporting of shop floor diameter logs.
+
+## 🗂️ Sensible Layout
+- `/src`: The engine (Python logic).
+- `/data`: The raw materials (Requires `sample_input.txt` to run immediately).
+- `/reports`: The finished goods (Output `.csv` and `.txt` files).
+
+## 🧹 Maintenance
+All experimental dead code has been swept from this repository to maintain a clean workshop[cite: 8].
+    
