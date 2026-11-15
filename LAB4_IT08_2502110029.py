@@ -1,42 +1,28 @@
-IT08
 import random
 
-mode = input("Enter mode (halt/skip): ").lower()
-
-accept = 0
-rework = 0
-scrap = 0
-inspected = 0
+mode = input("Enter operator mode (halt/skip): ").strip().lower()
+inspected_count = 0
+scrap_count = 0
 
 for i in range(100):
-    diameter = random.uniform(24.90, 25.10)
-    inspected += 1
-
+    diameter = round(random.uniform(24.85, 25.15), 2)
+    inspected_count += 1
+    
     if 24.95 <= diameter <= 25.05:
-        bin = "ACCEPT"
-        accept += 1
-
+        pass # ACCEPT
     elif 24.90 <= diameter < 24.95 or 25.05 < diameter <= 25.10:
-        bin = "REWORK"
-        rework += 1
-
+        pass # REWORK
     else:
-        bin = "SCRAP"
-        scrap += 1
-        print(f"Diameter: {diameter:.2f} -> SCRAP")
-
+        # SCRAP condition met
         if mode == "halt":
-            print("HALT MODE: Scrap detected. Batch stopped.")
+            print(f"SCRAP found ({diameter}). Halting production.")
             break
         elif mode == "skip":
-            print("SKIP MODE: Scrap logged. Continuing batch.")
+            print(f"SCRAP logged ({diameter}). Skipping.")
+            scrap_count += 1
             continue
 
-    print(f"Diameter: {diameter:.2f} -> {bin}")
-
-print("\n--- SHIFT REPORT ---")
-print(f"Mode: {mode.upper()}")
-print(f"Inspected: {inspected}")
-print(f"ACCEPT: {accept}")
-print(f"REWORK: {rework}")
-print(f"SCRAP: {scrap}")
+if mode == "halt":
+    print(f"Parts inspected before stop: {inspected_count}")
+else:
+    print(f"Batch finished. Total scrap skipped: {scrap_count}")
