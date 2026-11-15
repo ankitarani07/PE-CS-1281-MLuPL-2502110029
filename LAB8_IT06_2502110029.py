@@ -1,43 +1,42 @@
-IT06
-def parse(line):
+# Place this inside shoptools.py
+
+def parse_safely(line):
+    """Parses a line and returns (diameter, None) or (None, error_string)."""
     try:
-        code, dia = line.split(",")
-        dia = float(dia)
-
-        if not code.startswith("P"):
-            raise ValueError("invalid part code")
-
-        if dia < 0 or dia > 100:
-            raise ValueError("diameter out of range")
-
-        return code, dia
-
+        parts = line.split()
+        dia = float(parts[1])
+        shift = parts[2]
+        return dia, None
+    except AttributeError:
+        return None, "AttributeError"
+    except IndexError:
+        return None, "IndexError"
     except ValueError:
-        return None
-
+        return None, "ValueError"
 
 def run_tests():
+    """Feeds all eight hostile inputs through the parser to self-certify."""
     hostile = [
-        "",
-        "ABC",
-        "12,",
-        ",25",
-        "12,25,30",
-        "abc,25",
-        "P101,-5",
-        "P101,999999"
+        "X-001 twenty Day", "X-002", "", "X-004 25.01", 
+        "   ", "X-006 25.0.1 Day", None, []
     ]
+    
+    print(f"{'Test Input':<20} | {'Test Status':<12} | {'Caught Exception'}")
+    print("-" * 55)
+    
+    for test_case in hostile:
+        result, error = parse_safely(test_case)
+        
+        # In a test suite, catching the expected error means the test PASSED
+        status = "PASS (Handled)" if error else "FAIL (Crashed)"
+        
+        # Formatting for readability
+        display_input = str(test_case) if test_case is not None else "None Object"
+        if len(display_input) == 0 or display_input.isspace():
+            display_input = "[Empty/Whitespace]"
+            
+        print(f"{display_input:<20} | {status:<12} | {error}")
 
-    print("PASS/FAIL TABLE")
-    print("-------------------------------")
-
-    for i, line in enumerate(hostile, 1):
-        result = parse(line)
-
-        if result is None:
-            print(f"Test {i}: PASS - rejected {line!r}")
-        else:
-            print(f"Test {i}: FAIL - accepted {line!r}")
-
-
-run_tests()
+# Run the test suite on demand
+if __name__ == "__main__":
+    run_tests()
