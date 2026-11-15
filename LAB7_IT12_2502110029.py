@@ -1,30 +1,28 @@
-IT12
-class Machine:
-    def __init__(self, name, model, limit):
-        self.name = name
-        self.model = model
-        self.limit = limit
-        self.running = False
+class CNCMachine:
+    def __init__(self, model_name, max_rpm):
+        # Three attributes, including one limit (max_rpm)
+        self.model_name = model_name
+        self.max_rpm = max_rpm
+        self.parts_produced = 0
 
     def __str__(self):
-        return f"{self.name} - {self.model} (Limit: {self.limit})"
+        # Nameplate
+        return f"[{self.model_name}] Rated for max {self.max_rpm} RPM"
 
-    def start(self):
-        self.running = True
-        return f"{self.name} started"
-
+    def process_part(self):
+        # Working method
+        self.parts_produced += 1
 
 # Commission two machines
-machine1 = Machine("Lathe", "L100", 500)
-machine2 = Machine("Drill", "D200", 300)
+lathe = CNCMachine("Lathe-Alpha", 3000)
+mill = CNCMachine("Mill-Beta", 4500)
 
-# Print both nameplates
-print(machine1)
-print(machine2)
+# Prove their states are independent
+lathe.process_part()
+lathe.process_part()
+mill.process_part()
 
-# Start only machine1
-print(machine1.start())
-
-# Prove states are independent
-print("Machine 1 running:", machine1.running)
-print("Machine 2 running:", machine2.running)
+print(lathe)
+print(f"Lathe production: {lathe.parts_produced}")
+print(mill)
+print(f"Mill production: {mill.parts_produced}")
