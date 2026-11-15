@@ -1,58 +1,34 @@
-IT08
-# 10 messy log lines
-logs = [
-    "P101   25.4   A",
-    "P102  30.2 B",
-    "P103    18.7    C",
-    "P104 22.5 D",
-    "P105     27.8 E",
-    "P106  31.0    F",
-    "P107   19.6 G",
-    "P108  24.3     H",
-    "P109 29.7 I",
-    "P110    21.5    J"
+log_lines = [
+    "X-001 25.01 Day", "X-002 24.95 Day", "X-003 25.10 Day", 
+    "X-004 25.00 Day", "X-005 24.80 Day", "X-006 25.05 Day"
 ]
 
-# Three separate bins
-accepted = []
-rework = []
-scrap = []
+accepted_diameters = []
+rework_diameters = []
+scrap_diameters = []
+scrapped_part_codes = []
 
-# Store the part codes that are scrapped
-scrap_parts = []
-
-# Parse and classify each log
-for line in logs:
+for line in log_lines:
     parts = line.split()
-
-    part_code = parts[0]
-    diameter = float(parts[1])
-
-    # Example diameter rules:
-    # 22 <= diameter <= 28: accepted
-    # 20 <= diameter < 22 or 28 < diameter <= 30: rework
-    # Otherwise: scrap
-    if 22 <= diameter <= 28:
-        accepted.append(diameter)
-
-    elif 20 <= diameter < 22 or 28 < diameter <= 30:
-        rework.append(diameter)
-
+    code = parts[0]
+    dia = float(parts[1])
+    
+    # Placeholder sorting logic
+    if 24.95 <= dia <= 25.05:
+        accepted_diameters.append(dia)
+    elif 24.90 <= dia < 24.95 or 25.05 < dia <= 25.10:
+        rework_diameters.append(dia)
     else:
-        scrap.append(diameter)
-        scrap_parts.append(part_code)
+        scrap_diameters.append(dia)
+        scrapped_part_codes.append(code)
 
-# Counts
-print("Accepted count:", len(accepted))
-print("Rework count:", len(rework))
-print("Scrap count:", len(scrap))
-
-# Accepted average
-if accepted:
-    accepted_average = sum(accepted) / len(accepted)
-    print("Accepted average:", accepted_average)
+if len(accepted_diameters) > 0:
+    accepted_avg = sum(accepted_diameters) / len(accepted_diameters)
 else:
-    print("Accepted average: No accepted parts")
+    accepted_avg = 0
 
-# Part codes that were scrapped
-print("Scrapped part codes:", scrap_parts)
+print(f"ACCEPTED count: {len(accepted_diameters)}")
+print(f"REWORK count: {len(rework_diameters)}")
+print(f"SCRAP count: {len(scrap_diameters)}")
+print(f"Accepted Average: {accepted_avg:.2f}")
+print(f"Scrapped Part Codes: {scrapped_part_codes}")
