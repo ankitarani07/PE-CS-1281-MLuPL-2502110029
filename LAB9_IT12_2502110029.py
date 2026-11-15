@@ -1,42 +1,24 @@
-IT 12
 import os
 
-# Create the data folder if it doesn't exist
+# Create the data directory if it doesn't exist
 os.makedirs("data", exist_ok=True)
 
-# Create test records, including three deliberately faulty ones
+# 12 clean records + 3 filthy ones from Lab 08
 records = [
-    "WO01 | Machine A | Normal operation",
-    "WO02 | Machine B | Completed successfully",
-    "WO03 | Machine C | Temperature stable",
-    "WO04 | Machine D | Maintenance completed",
-    "WO05 | Machine A | No issues reported",
-    "WO06 | Machine B | Oil level checked",
-    "WO07 | Machine C | Running normally",
-
-    # Three deliberately filthy records
-    "WO08 | Machine X | ERROR: Temperature = -9999",
-    "WO08 | ??? | NULL | !!! | BROKEN DATA",
-    "WO08 | Machine Z | Pressure = HIGHHIGHHIGH",
-
-    "WO09 | Machine D | Inspection passed",
-    "WO10 | Machine A | Operating normally",
-    "WO11 | Machine B | Filter replaced",
-    "WO12 | Machine C | Maintenance required",
-    "WO13 | Machine D | Shift completed"
+    "X-001 25.01 Day\n", "X-002 24.95 Day\n", "X-003 25.10 Day\n",
+    "X-004 25.00 Day\n", "X-005 24.80 Day\n", "X-006 25.05 Day\n",
+    "X-007 25.01 Day\n", "X-008 24.99 Day\n", "X-009 25.15 Day\n",
+    "X-010 25.02 Day\n", "X-011 25.00 Day\n", "X-012 24.98 Day\n",
+    "X-013 twenty Day\n",  # Filthy 1: Bad float
+    "X-014\n",             # Filthy 2: Missing fields
+    "   \n"                # Filthy 3: Whitespace only
 ]
 
+# Write to file
+with open("data/shift_log.txt", "w") as f:
+    f.writelines(records)
 
-# Write records to the file
-with open("data/shift_log.txt", "w") as file:
-    for record in records:
-        file.write(record + "\n")
-
-# Read the file back
-with open("data/shift_log.txt", "r") as file:
-    lines = file.readlines()
-
-# Print the records and line count
-print("SHIFT LOG:")
-for line in lines:
-    print(line.strip())
+# Read back and print the line count
+with open("data/shift_log.txt", "r") as f:
+    lines = f.readlines()
+    print(f"Line count read from file: {len(lines)}")
