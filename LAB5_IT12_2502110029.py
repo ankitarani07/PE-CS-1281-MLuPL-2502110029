@@ -1,18 +1,13 @@
-IT12
+raw_line = "A-101   25.02   Morning"
 
-# Raw bench line
-line = "P123 25.4 3.5"
+# .split() automatically handles multiple spaces and tabs
+parts = raw_line.split()
 
-# Extract the fields
-part_code, dia, shift = line.split()
+part_code = parts[0]
+diameter = float(parts[1])
+shift = parts[2]
 
-# Convert diameter to a real float
-dia = float(dia)
-
-# Print each value with a label
-print("Part code:", part_code)
-print("Diameter:", dia)
-print("Shift:", shift)
-
-# Prove diameter is a number
-print("Diameter + 0.01:", dia + 0.01)
+print(f"Part Code: {part_code}")
+print(f"Diameter: {diameter}")
+print(f"Shift: {shift}")
+print(f"Proof of float: {diameter + 0.01}")
