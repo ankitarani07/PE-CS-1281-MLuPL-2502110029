@@ -1,25 +1,35 @@
-import random
+# Taking tests 1-6 as specified
+log_lines = hostile[:6] 
 
-accept_count = 0
-rework_count = 0
-scrap_count = 0
+valid_diameters = []
+rejects = []
 
-# Loop set to 100 as instructed
-for i in range(100):
-    # Expanded the random range slightly so SCRAP is possible
-    diameter = round(random.uniform(24.85, 25.15), 2)
-    
-    # Placeholder Job 09 bounds
-    if 24.95 <= diameter <= 25.05:
-        print(f"{diameter} - ACCEPT")
-        accept_count += 1
-    elif 24.90 <= diameter < 24.95 or 25.05 < diameter <= 25.10:
-        print(f"{diameter} - REWORK")
-        rework_count += 1
-    else:
-        print(f"{diameter} - SCRAP")
-        scrap_count += 1
+for line in log_lines:
+    try:
+        parts = line.split()
+        dia = float(parts[1])
+        shift = parts[2] # Accessing 3rd element ensures we have enough fields
+        valid_diameters.append(dia)
+        
+    except AttributeError as e:
+        rejects.append((line, "AttributeError: Input lacks string methods (.split)"))
+    except IndexError as e:
+        rejects.append((line, "IndexError: Missing required fields in log line"))
+    except ValueError as e:
+        rejects.append((line, "ValueError: Diameter cannot be converted to a float"))
 
-print(f"\n--- Shift Report ---")
-print(f"ACCEPT: {accept_count} | REWORK: {rework_count} | SCRAP: {scrap_count}")
-print("\nRecord: Same code, ten times the work, zero extra effort.")
+# Guarded average: prevents ZeroDivisionError if all parts are rejected
+if len(valid_diameters) > 0:
+    guarded_avg = sum(valid_diameters) / len(valid_diameters)
+else:
+    guarded_avg = 0.0
+
+print("--- Shift Report ---")
+print(f"Valid Parts: {len(valid_diameters)}")
+print(f"Average Diameter: {guarded_avg:.2f}")
+
+print("\n--- Rejects Table ---")
+for bad_line, reason in rejects:
+    # Safely print lines that might be empty or whitespace
+    display_line = bad_line if str(bad_line).strip() else "[Empty/Whitespace]"
+    print(f"Line: {display_line:<20} | Reason: {reason}")
