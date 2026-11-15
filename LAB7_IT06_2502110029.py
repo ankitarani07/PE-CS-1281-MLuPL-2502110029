@@ -1,41 +1,20 @@
-IT06
-class Machine:
-    def __init__(self, name, limit):
-        self.name = name
-        self.limit = limit
-        self.parts = 0
-        self.busy = False
+# shoptools.py
 
-    def process(self, speed):
-        if speed <= self.limit:
-            self.parts += 1
-            self.busy = True
-            return True
-        return False
+class FleetMachine:
+    def __init__(self, machine_id, max_rpm):
+        self.machine_id = machine_id
+        self.__max_rpm = max_rpm
+        self.__parts_produced = 0
+        self.is_free = True
 
+    def __str__(self):
+        return f"[{self.machine_id}]"
 
-machines = [
-    Machine("Lathe", 100),
-    Machine("Drill", 80),
-    Machine("Mill", 120)
-]
+    def process_part(self):
+        self.__parts_produced += 1
+        
+    def get_parts_count(self):
+        return self.__parts_produced
 
-jobs = [50, 70, 90, 60, 110, 40, 100, 75, 115, 55]
-
-for speed in jobs:
-    machine = next((m for m in machines if not m.busy), None)
-
-    if machine:
-        machine.process(speed)
-
-    for m in machines:
-        m.busy = False
-
-busiest = max(machines, key=lambda m: m.parts)
-
-print("Plant Report")
-for m in machines:
-    print(m.name, ":", m.parts, "parts")
-
-print("Plant total:", sum(m.parts for m in machines))
-print("Busiest machine:", busiest.name)
+    def status(self):
+        return f"{self.machine_id}: {self.__parts_produced} parts"
