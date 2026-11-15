@@ -1,66 +1,21 @@
-  IT 08
-
 import re
 
-# Regex pattern:
-# 1. Work order must follow WO + digits
-# 2. Machine name is the second field
-# 3. Status is the third field
-# 4. Allows any spacing around | separators
+# Regex pattern tolerates any spacing (\s*), requires a shape like X-123, a float, and a shift word
+pattern = re.compile(r"^\s*([A-Z]-\d{3})\s+(\d+\.\d+)\s+([A-Za-z]+)\s*$")
 
-pattern = re.compile(
-    r"^\s*(WO\d+)\s*\|\s*([^|]+?)\s*\|\s*(.+?)\s*$"
-)
-
-def parse_record(line):
-    # OLD VERSION: split-based parser
-    # parts = [part.strip() for part in line.split("|")]
-    # if len(parts) != 3:
-    #     return None
-    # return parts[0], parts[1], parts[2]
-
-    # NEW VERSION: Regex parser
-    match = pattern.fullmatch(line)
-
+def parse_regex(line):
+    match = pattern.match(line)
     if match:
-        work_order, machine, status = match.groups()
+        return match.group(1), float(match.group(2)), match.group(3)
+    else:
+        raise ValueError("Format mismatch: Line rejected by regex pattern")
 
-        if machine.strip() and status.strip():
-            return work_order, machine.strip(), status.strip()
-
-    return None
-
-
-# Read actual input from file
-input_file = "data/shift_log.txt"
-
-valid_records = []
-rejected_records = []
-
-with open(input_file, "r") as file:
-    for line_number, line in enumerate(file, start=1):
-        result = parse_record(line.strip())
-
-        if result:
-            valid_records.append(result)
-        else:
-            rejected_records.append((line_number, line.strip()))
-
-# Display results
-print("REGEX PARSER RESULTS")
-print("--------------------")
-
-print("Valid records:", len(valid_records))
-print("Rejected records:", len(rejected_records))
-
-print("\nAccepted records:")
-for record in valid_records:
-    print(record)
-
-print("\nRejected records:")
-for record in rejected_records:
-    print(record)
-
-# Test comparison note:
-# Regex parser survived more spacing variations than split().
-# Split parser was simpler but did not validate the WO code shape.
+# --- RECORD NOTE REQUIRED BY ASSIGNMENT ---
+# def parse_split(line):
+#     parts = line.split()
+#     return parts[0], float(parts[1]), parts[2]
+# 
+# Which one survived more test lines? 
+# Answer: The regex version survives more test lines gracefully. `.split()` blindly attempts 
+# to cast data and throws IndexErrors/ValueErrors deep inside the logic. Regex natively validates 
+# the part code shape and the presence of a float upfront, acting as a much stronger gatekeeper.
