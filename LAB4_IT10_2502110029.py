@@ -1,27 +1,25 @@
-IT10
 import random
 
-accept = 0
-rework = 0
-scrap = 0
+accept_count = 0
+rework_count = 0
+scrap_count = 0
 
+# Loop set to 100 as instructed
 for i in range(100):
-    diameter = random.uniform(24.90, 25.10)
-
+    # Expanded the random range slightly so SCRAP is possible
+    diameter = round(random.uniform(24.85, 25.15), 2)
+    
+    # Placeholder Job 09 bounds
     if 24.95 <= diameter <= 25.05:
-        bin = "ACCEPT"
-        accept += 1
+        print(f"{diameter} - ACCEPT")
+        accept_count += 1
     elif 24.90 <= diameter < 24.95 or 25.05 < diameter <= 25.10:
-        bin = "REWORK"
-        rework += 1
+        print(f"{diameter} - REWORK")
+        rework_count += 1
     else:
-        bin = "SCRAP"
-        scrap += 1
+        print(f"{diameter} - SCRAP")
+        scrap_count += 1
 
-    print(f"Diameter: {diameter:.2f} -> {bin}")
-
-print("\n--- SHIFT REPORT ---")
-print(f"ACCEPT: {accept}")
-print(f"REWORK: {rework}")
-print(f"SCRAP: {scrap}")
-print("\nSame code, ten times the work, zero extra effort.")
+print(f"\n--- Shift Report ---")
+print(f"ACCEPT: {accept_count} | REWORK: {rework_count} | SCRAP: {scrap_count}")
+print("\nRecord: Same code, ten times the work, zero extra effort.")
