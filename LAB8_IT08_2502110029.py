@@ -1,42 +1,34 @@
-IT08
-id="q7w4az"
+# 1. Define the custom domain exception
 class SpecViolation(Exception):
+    """Raised when a machine receives an out-of-bounds command."""
     pass
 
-
-class Machine:
-    def __init__(self, name, limit):
+# 2. Update the Machine class from previous labs
+class GuardedMachine:
+    def __init__(self, name, max_rpm):
         self.name = name
-        self.limit = limit
-        self.parts = 0
+        self.max_rpm = max_rpm
+        self.parts_produced = 0
 
-    def operate(self, speed):
-        if speed < 0 or speed > self.limit:
-            raise SpecViolation(
-                f"{self.name}: speed {speed} is outside limit {self.limit}"
-            )
+    def process(self, rpm_command):
+        if rpm_command <= 0 or rpm_command > self.max_rpm:
+            # Raise the exception instead of just printing an error
+            raise SpecViolation(f"Command {rpm_command} RPM exceeds limit of {self.max_rpm}.")
+        
+        self.parts_produced += 1
+        return True
 
-        self.parts += 1
-        return f"{self.name} processed job"
+# 3. Driving program catching the exception
+mill = GuardedMachine("Mill-Alpha", 4000)
+batch_jobs = [3500, 4500, 3800] # 4500 RPM will trigger the SpecViolation
 
-
-machines = [
-    Machine("Lathe", 100),
-    Machine("Drill", 80),
-    Machine("Mill", 120)
-]
-
-jobs = [50, 90, 150, 60, 70, 110, 40]
-
-for i, speed in enumerate(jobs, 1):
-    machine = machines[(i - 1) % len(machines)]
-
+print("--- Starting Batch ---")
+for job in batch_jobs:
     try:
-        print(machine.operate(speed))
+        mill.process(job)
+        print(f"Success: Processed job at {job} RPM")
     except SpecViolation as error:
-        print("REJECTED:", error)
+        # Catching the error ensures one bad job never stops the fleet
+        print(f"Job Rejected: {error} - Moving to next job.")
 
-print("\nFleet Report")
-for machine in machines:
-    print(machine.name, ":", machine.parts, "parts")
-  
+print(f"Total parts produced: {mill.parts_produced}")
