@@ -1,11 +1,13 @@
-IT 08
+total_parts = int(input("Enter total parts: "))
+box_size = int(input("Enter box size: "))
 
-total = int(input("Enter total parts: "))
-size = int(input("Enter box size: "))
+# Calculate full boxes and loose parts
+full_boxes = total_parts // box_size
+loose_parts = total_parts % box_size
 
-boxes = total // size
-loose = total % size
+print(f"Full boxes: {full_boxes}")
+print(f"Loose parts: {loose_parts}")
 
-print("Full boxes =", boxes)
-print("Loose parts =", loose)
-print("Audit:", boxes, "*", size, "+", loose, "==", total, "->", boxes * size + loose == total)
+# Print the audit line showing True
+audit_check = (full_boxes * box_size) + loose_parts == total_parts
+print(f"Audit (boxes*size + loose == total): {audit_check}")
