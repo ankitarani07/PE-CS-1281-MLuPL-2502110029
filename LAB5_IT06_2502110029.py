@@ -1,83 +1,36 @@
-IT06
-# Day-shift log lines
-day_logs = [
-    "P101   25.4   ACCEPT",
-    "P102  30.2   SCRAP",
-    "P103    18.7   SCRAP",
-    "P104 22.5   ACCEPT",
-    "P105     27.8   REWORK",
-    "P106  31.0 SCRAP",
-    "P107   19.6   SCRAP",
-    "P108  24.3   ACCEPT",
-    "P109 29.7   REWORK",
-    "P110    21.5   ACCEPT"
+day_shift_logs = [
+    "D-001 25.00 Day", "D-002 24.80 Day", "D-003 24.98 Day", "D-004 25.20 Day"
 ]
-
-# Night-shift log lines
-night_logs = [
-    "P101  25.4 ACCEPT",
-    "P102    30.2 SCRAP",
-    "P103 18.7 SCRAP",
-    "P111   23.5 ACCEPT",
-    "P112  31.5 SCRAP",
-    "P113    27.2 REWORK",
-    "P114 19.2 SCRAP",
-    "P108   24.3 ACCEPT",
-    "P115 29.5 REWORK",
-    "P116  21.8 ACCEPT"
+night_shift_logs = [
+    "N-001 25.01 Night", "D-002 24.75 Night", "N-003 25.05 Night", "D-004 24.60 Night"
 ]
-
 
 def parse_shift(logs):
-    """Parse one shift and return total parts, accepted count, and scrap codes."""
-    accepted_count = 0
-    scrap_codes = []
-
+    accepts = 0
+    scrap_codes = set()
     for line in logs:
         parts = line.split()
+        code = parts[0]
+        dia = float(parts[1])
+        
+        # Placeholder logic
+        if 24.95 <= dia <= 25.05:
+            accepts += 1
+        elif dia < 24.90 or dia > 25.10:
+            scrap_codes.add(code)
+            
+    accept_rate = (accepts / len(logs)) * 100 if logs else 0
+    return accept_rate, scrap_codes
 
-        part_code = parts[0]
-        status = parts[2]
+day_rate, day_scraps = parse_shift(day_shift_logs)
+night_rate, night_scraps = parse_shift(night_shift_logs)
 
-        if status == "ACCEPT":
-            accepted_count += 1
-        elif status == "SCRAP":
-            scrap_codes.append(part_code)
+print(f"Day Shift Accept Rate: {day_rate:.1f}%")
+print(f"Night Shift Accept Rate: {night_rate:.1f}%")
 
-    return len(logs), accepted_count, scrap_codes
+# Using Set operations
+both_shifts_scrap = day_scraps.intersection(night_scraps)
+unique_to_one_scrap = day_scraps.symmetric_difference(night_scraps)
 
-
-# Parse day and night separately
-day_total, day_accepted, day_scrap = parse_shift(day_logs)
-night_total, night_accepted, night_scrap = parse_shift(night_logs)
-
-# Calculate accept rates
-day_accept_rate = day_accepted / day_total * 100
-night_accept_rate = night_accepted / night_total * 100
-
-print("DAY SHIFT")
-print("Accept rate:", day_accept_rate, "%")
-print("Scrap codes:", day_scrap)
-
-print("\nNIGHT SHIFT")
-print("Accept rate:", night_accept_rate, "%")
-print("Scrap codes:", night_scrap)
-
-
-# Convert scrap lists to sets for comparison
-day_scrap_set = set(day_scrap)
-night_scrap_set = set(night_scrap)
-
-# Parts scrapped in BOTH shifts
-scrapped_both = day_scrap_set & night_scrap_set
-
-# Parts unique to the day shift
-day_only_scrap = day_scrap_set - night_scrap_set
-
-# Parts unique to the night shift
-night_only_scrap = night_scrap_set - day_scrap_set
-
-print("\nSCRAP COMPARISON")
-print("Scrapped in both shifts:", sorted(scrapped_both))
-print("Scrapped only during day:", sorted(day_only_scrap))
-print("Scrapped only during night:", sorted(night_only_scrap))
+print(f"Codes scrapped in BOTH shifts (Intersection): {both_shifts_scrap}")
+print(f"Codes scrapped in ONLY ONE shift (Symmetric Difference): {unique_to_one_scrap}")
