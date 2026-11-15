@@ -1,32 +1,24 @@
-IT06
+# shoptools.py
 def inspect(dia):
-    if dia < 10:
-        return "Small"
-    elif dia < 20:
-        return "Medium"
-    return "Large"
-
-def lookup(catalogue, code):
-    return catalogue.get(code, 0)
-
-def scrap_codes(catalogue):
-    return {code for code, dia in catalogue.items() if dia < 10 or dia > 20}
+    if 24.95 <= dia <= 25.05: return "ACCEPT"
+    elif 24.90 <= dia < 24.95 or 25.05 < dia <= 25.10: return "REWORK"
+    else: return "SCRAP"
 
 def tally(labels):
-    counts = {}
+    counts = {"ACCEPT": 0, "REWORK": 0, "SCRAP": 0}
     for label in labels:
-        counts[label] = counts.get(label, 0) + 1
+        if label in counts: counts[label] += 1
     return counts
 
 def report(shift, counts):
-    return f"Shift {shift}: {counts}"
+    return f"[{shift} Shift] ACCEPT: {counts.get('ACCEPT', 0)} | REWORK: {counts.get('REWORK', 0)} | SCRAP: {counts.get('SCRAP', 0)}"
 
-logs = ["P101,12", "P102,25", "P103,8", "P104,15"]
-catalogue = {x.split(",")[0]: float(x.split(",")[1]) for x in logs}
+def lookup(catalog_dict, code):
+    return catalog_dict.get(code, "Not found")
 
-labels = [inspect(dia) for dia in catalogue.values()]
-counts = tally(labels)
-
-print(report("A", counts))
-print("Lookup P999:", lookup(catalogue, "P999"))
-print("Scrap:", scrap_codes(catalogue))
+def scrap_codes(catalog_dict):
+    scrapped = set()
+    for code, dia in catalog_dict.items():
+        if inspect(dia) == "SCRAP":
+            scrapped.add(code)
+    return scrapped
